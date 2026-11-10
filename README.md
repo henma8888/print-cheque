@@ -8,7 +8,7 @@
 
 **https://henma8888.github.io/print-cheque/**
 
-第一次打開要有網絡；之後同一個瀏覽器可以離線再用。
+第一次打開要有網絡；之後同一個瀏覽器可以離線再用。網站由倉庫 `docs/` 資料夾以 GitHub Pages 發布（每次改程式後跑 `npm run build`，再提交更新咗嘅 `docs/`）。
 
 ## 點用
 

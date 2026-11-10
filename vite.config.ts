@@ -33,6 +33,10 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    outDir: 'docs',
+    emptyOutDir: true,
+  },
   test: {
     environment: 'node',
   },

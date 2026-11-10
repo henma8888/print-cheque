@@ -1,0 +1,1 @@
+{"name":"開支票","short_name":"開支票","description":"簡潔開支票：日期、抬頭、銀碼對位列印","start_url":"/print-cheque/","display":"standalone","background_color":"#f4f0e8","theme_color":"#1c4d3e","lang":"zh-HK","scope":"/print-cheque/","icons":[{"src":"favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
