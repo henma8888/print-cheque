@@ -1,0 +1,56 @@
+@media print {
+  @page { margin: 0; }
+
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .app-shell, .dialog-backdrop { display: none !important; }
+
+  .print-root {
+    display: block !important;
+  }
+
+  .print-page {
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .print-cheque {
+    position: absolute;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .print-field {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    font-family: 'Noto Serif TC', 'Songti TC', 'PMingLiU', 'Songti SC', serif;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.1;
+  }
+
+  .print-field.number { justify-content: flex-end; }
+
+  .no-print, .grid-lines, .preview-cheque .bg, .align-only {
+    display: none !important;
+  }
+}
