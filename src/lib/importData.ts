@@ -1,15 +1,16 @@
 import { chineseFromInput, parseAmount } from './amount'
-import { parseDateInput, type ChequeDate } from './date'
+import { parseDateInput, todayParts, type ChequeDate } from './date'
 import type { ChequeRow } from './types'
 
 export function newRow(partial: Partial<ChequeRow> = {}): ChequeRow {
+  const today = todayParts()
   const amount = partial.amount ?? ''
   const chinese = partial.chinese ?? (amount ? chineseFromInput(amount) : '')
   return {
     id: partial.id ?? crypto.randomUUID(),
-    day: '',
-    month: '',
-    year: '',
+    day: today.day,
+    month: today.month,
+    year: today.year,
     payee: '',
     chineseManual: false,
     ...partial,

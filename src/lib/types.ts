@@ -60,7 +60,7 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
   chequeWidthCm: 17,
   chequeHeightCm: 8.9,
   marginRightMm: 0,
-  marginLeftMm: 0,
+  marginLeftMm: 40,
   marginTopMm: 8,
   fontSizePt: 12,
   dateXmm: 112,
@@ -86,4 +86,4 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
 }
 
 export const STORAGE_KEY = 'print-cheque:v1'
-export const SETTINGS_VERSION = 1
+export const SETTINGS_VERSION = 2

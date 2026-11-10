@@ -12,9 +12,9 @@ export function loadLayout(): LayoutSettings {
     if (!raw) return { ...DEFAULT_LAYOUT }
     const parsed = JSON.parse(raw) as Partial<PersistedState> & Partial<LayoutSettings>
     if (parsed && typeof parsed === 'object' && parsed.layout) {
-      return mergeLayout(parsed.layout)
+      return mergeLayout(parsed.layout, parsed.version ?? 1)
     }
-    return mergeLayout(parsed as Partial<LayoutSettings>)
+    return mergeLayout(parsed as Partial<LayoutSettings>, 1)
   } catch {
     return { ...DEFAULT_LAYOUT }
   }
@@ -45,9 +45,9 @@ export function exportSettings(layout: LayoutSettings): string {
 export function importSettings(json: string): LayoutSettings {
   const parsed = JSON.parse(json) as Partial<PersistedState> & Partial<LayoutSettings>
   if (parsed && typeof parsed === 'object' && parsed.layout) {
-    return mergeLayout(parsed.layout)
+    return mergeLayout(parsed.layout, parsed.version ?? 1)
   }
-  return mergeLayout(parsed as Partial<LayoutSettings>)
+  return mergeLayout(parsed as Partial<LayoutSettings>, 1)
 }
 
 export function downloadText(filename: string, text: string, mime = 'application/json'): void {

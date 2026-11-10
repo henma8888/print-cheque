@@ -10,12 +10,14 @@ export function applyPaperPreset(
   preset: PaperPreset,
 ): LayoutSettings {
   const paper = PAPER_PRESETS[preset]
-  return {
+  const align = detectPaperAlign(settings)
+  const next: LayoutSettings = {
     ...settings,
     paperPreset: preset,
     paperWidthMm: paper.widthMm,
     paperHeightMm: paper.heightMm,
   }
+  return applyPaperAlign(next, align.vertical, align.horizontal)
 }
 
 export function chequeSizeMm(settings: LayoutSettings): {
@@ -90,6 +92,73 @@ export function checkOverflow(settings: LayoutSettings): OverflowWarning {
   }
 }
 
-export function mergeLayout(partial: Partial<LayoutSettings> | null | undefined): LayoutSettings {
-  return { ...DEFAULT_LAYOUT, ...(partial ?? {}) }
+export type VerticalPaperAlign = 'top' | 'middle' | 'bottom'
+export type HorizontalPaperAlign = 'left' | 'right'
+
+function near(a: number, b: number, tol = 0.6): boolean {
+  return Math.abs(a - b) < tol
+}
+
+function roundMm(n: number): number {
+  return Math.round(n * 10) / 10
+}
+
+export function maxChequeOffset(settings: LayoutSettings): { left: number; top: number } {
+  const { widthMm, heightMm } = chequeSizeMm(settings)
+  return {
+    left: Math.max(0, settings.paperWidthMm - widthMm),
+    top: Math.max(0, settings.paperHeightMm - heightMm),
+  }
+}
+
+export function detectPaperAlign(settings: LayoutSettings): {
+  vertical: VerticalPaperAlign | 'custom'
+  horizontal: HorizontalPaperAlign | 'custom'
+} {
+  const max = maxChequeOffset(settings)
+  const horizontal: HorizontalPaperAlign | 'custom' = near(settings.marginLeftMm, 0)
+    ? 'left'
+    : near(settings.marginLeftMm, max.left)
+      ? 'right'
+      : 'custom'
+  const vertical: VerticalPaperAlign | 'custom' = near(settings.marginTopMm, 0)
+    ? 'top'
+    : near(settings.marginTopMm, max.top)
+      ? 'bottom'
+      : near(settings.marginTopMm, max.top / 2)
+        ? 'middle'
+        : 'custom'
+  return { vertical, horizontal }
+}
+
+/** Move the cheque / print area on the paper. Does not move fields inside the cheque. */
+export function applyPaperAlign(
+  settings: LayoutSettings,
+  vertical?: VerticalPaperAlign | 'custom',
+  horizontal?: HorizontalPaperAlign | 'custom',
+): LayoutSettings {
+  const { widthMm } = chequeSizeMm(settings)
+  const max = maxChequeOffset(settings)
+  let top = settings.marginTopMm
+  let left = settings.marginLeftMm
+  if (vertical === 'top') top = 0
+  else if (vertical === 'middle') top = roundMm(max.top / 2)
+  else if (vertical === 'bottom') top = roundMm(max.top)
+  if (horizontal === 'left') left = 0
+  else if (horizontal === 'right') left = roundMm(max.left)
+  const right = Math.max(0, roundMm(settings.paperWidthMm - widthMm - left))
+  return { ...settings, marginTopMm: top, marginLeftMm: left, marginRightMm: right }
+}
+
+export function mergeLayout(
+  partial: Partial<LayoutSettings> | null | undefined,
+  version = 1,
+): LayoutSettings {
+  const layout = { ...DEFAULT_LAYOUT, ...(partial ?? {}) }
+  // v1 stored a left margin that was not used for placement; the cheque was pinned from the right.
+  if (version < 2) {
+    const { widthMm } = chequeSizeMm(layout)
+    layout.marginLeftMm = Math.max(0, roundMm(layout.paperWidthMm - widthMm - layout.marginRightMm))
+  }
+  return layout
 }

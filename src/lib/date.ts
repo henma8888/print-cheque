@@ -92,3 +92,13 @@ export function todayParts(now = new Date()): ChequeDate {
     year: String(now.getFullYear()),
   }
 }
+
+/** yyyy-mm-dd for <input type="date">; empty if the date is incomplete. */
+export function toIsoDate(date: ChequeDate): string {
+  if (!date.year || !date.month || !date.day) return ''
+  const year = date.year.length === 2 ? `20${date.year}` : date.year
+  if (year.length !== 4) return ''
+  const month = date.month.padStart(2, '0')
+  const day = date.day.padStart(2, '0')
+  return `${year}-${month}-${day}`
+}

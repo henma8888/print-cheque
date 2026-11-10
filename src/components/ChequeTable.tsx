@@ -1,5 +1,6 @@
 import DateInput from './DateInput'
 import { chineseFromInput } from '../lib/amount'
+import { todayParts } from '../lib/date'
 import type { ChequeRow } from '../lib/types'
 
 interface Props {
@@ -26,7 +27,7 @@ export default function ChequeTable({ rows, onChange }: Props) {
 
   const remove = (id: string) => {
     if (rows.length === 1) {
-      const blank = { ...rows[0], day: '', month: '', year: '', payee: '', amount: '', chinese: '', chineseManual: false }
+      const blank = { ...rows[0], ...todayParts(), payee: '', amount: '', chinese: '', chineseManual: false }
       onChange([blank])
       return
     }

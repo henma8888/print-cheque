@@ -207,7 +207,7 @@ table.cheque-table {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 25%, transparent);
 }
 
-.col-date { width: 148px; }
+.col-date { width: 188px; }
 .col-amount { width: 130px; }
 .col-chinese { width: 34%; }
 .col-del { width: 64px; text-align: right; }
@@ -391,4 +391,70 @@ table.cheque-table {
   .topbar { flex-direction: column; align-items: flex-start; }
   .app-shell { width: min(100% - 20px, 1120px); padding-top: 18px; }
   .brand h1 { font-size: 1.7rem; }
+}
+
+.date-input {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.date-input input[type='text'] {
+  flex: 1;
+  min-width: 0;
+}
+
+.date-input .date-picker {
+  width: 2.2rem;
+  min-height: 36px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color-scheme: light;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.date-input .date-picker::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.align-section {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.align-section > h2 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+}
+
+.paper-align {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 12px 0 4px;
+}
+
+.paper-align-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.paper-align-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.paper-align-group button[aria-pressed='true'] {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
 }

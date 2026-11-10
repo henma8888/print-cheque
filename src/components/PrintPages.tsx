@@ -22,7 +22,7 @@ function DatePrint({ row, layout }: { row: ChequeRow; layout: LayoutSettings }) 
 
 export default function PrintPages({ rows, layout }: Props) {
   const cheque = chequeSizeMm(layout)
-  const printable = rows.filter((r) => r.payee || r.amount || r.day || r.month || r.year)
+  const printable = rows.filter((r) => r.payee || r.amount)
 
   return (
     <>
@@ -46,8 +46,8 @@ export default function PrintPages({ rows, layout }: Props) {
                   width: `${cheque.widthMm}mm`,
                   height: `${cheque.heightMm}mm`,
                   top: `${layout.marginTopMm}mm`,
-                  right: `${layout.marginRightMm}mm`,
-                  left: 'auto',
+                  left: `${layout.marginLeftMm}mm`,
+                  right: 'auto',
                 }}
               >
                 <div

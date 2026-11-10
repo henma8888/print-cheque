@@ -1,7 +1,13 @@
 import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { formatNumericAmount, parseAmount } from '../lib/amount'
 import { compressImage } from '../lib/image'
-import { applyPaperPreset, checkOverflow, chequeSizeMm } from '../lib/layout'
+import {
+  applyPaperAlign,
+  applyPaperPreset,
+  checkOverflow,
+  chequeSizeMm,
+  detectPaperAlign,
+} from '../lib/layout'
 import { downloadText, exportSettings, importSettings } from '../lib/storage'
 import { PAPER_PRESETS, type ChequeRow, type LayoutSettings, type PaperPreset } from '../lib/types'
 
@@ -52,6 +58,7 @@ export default function AlignPanel({ layout, onChange, sample }: Props) {
   const [dragging, setDragging] = useState<FieldKey | null>(null)
   const [photoHint, setPhotoHint] = useState('')
   const overflow = checkOverflow(layout)
+  const paperAlign = detectPaperAlign(layout)
   const cheque = chequeSizeMm(layout)
 
   const scale = useMemo(() => {
@@ -129,7 +136,8 @@ export default function AlignPanel({ layout, onChange, sample }: Props) {
                 width: `${cheque.widthMm * scale}px`,
                 height: `${cheque.heightMm * scale}px`,
                 top: `${layout.marginTopMm * scale}px`,
-                right: `${layout.marginRightMm * scale}px`,
+                left: `${layout.marginLeftMm * scale}px`,
+                right: 'auto',
               }}
             >
               {layout.backgroundDataUrl ? (
@@ -191,7 +199,47 @@ export default function AlignPanel({ layout, onChange, sample }: Props) {
             </div>
           </div>
         </div>
-        <p className="hint">格線同底圖只係對位用，唔會印出。拖動欄位就可以校位置；數字銀碼可以單獨拉上拉下。</p>
+        <div className="paper-align" role="group" aria-label="列印範圍">
+          <span className="paper-align-label">列印範圍</span>
+          <div className="paper-align-group">
+            {(
+              [
+                ['top', '置頂'],
+                ['middle', '置中'],
+                ['bottom', '置底'],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                className="btn"
+                aria-pressed={paperAlign.vertical === value}
+                onClick={() => onChange(applyPaperAlign(layout, value, undefined))}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="paper-align-group">
+            {(
+              [
+                ['left', '靠左'],
+                ['right', '靠右'],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                className="btn"
+                aria-pressed={paperAlign.horizontal === value}
+                onClick={() => onChange(applyPaperAlign(layout, undefined, value))}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="hint">格線同底圖只係對位用，唔會印出。拖動欄位就可以校位置；數字銀碼可以單獨拉上拉下。上面掣係移動成個列印範圍喺紙上嘅位置。</p>
         {overflow.message ? <p className="warn">{overflow.message}</p> : null}
       </div>
 
